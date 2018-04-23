@@ -10,6 +10,10 @@ typedef struct
     void *return_value;  /*to store return value of thread*/
 } mypthread_t;
 
+typedef struct {
+	int lock; /*stores 1 if locked else 0*/
+} mypthread_mutex_t;
+
 typedef struct node
 {
     struct node *next;
