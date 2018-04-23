@@ -30,6 +30,33 @@ void stop_timer(void)
     setitimer(ITIMER_VIRTUAL, 0, 0);
 }
 
+void schedule_rr(void)
+{
+    mypthread_t *prev_thread, *next_thread = NULL;
+    stop_time();
+    if (getcontext(&main_context) == -1)
+    {
+        perror("Can't get current context");
+        exit(EXIT_FAILURE);
+    
+    }
+    prev_thread = current_running;
+    if (!cancel_current)
+        enqueue(&ready_que, prev_thread);
+    else
+        cancel_current = 0;
+    next_thread = dequeue(&ready_que);
+    if (next_thread == NULL)
+    {
+        printf("Everything done in ready queue!\n"); // For testing.
+        exit(EXIT_SUCCESS);
+    }
+    current_running = next_thread;
+    start_time();
+    if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+        perror("Error while trying to swap context.");
+}
+
 int mypthread_cancel(mypthread_t *thread)
 {
     int found = 0;
@@ -49,7 +76,8 @@ int mypthread_cancel(mypthread_t *thread)
     }
     if (thread->id == current_running->id)
     {
-        // TODO: Reschedule
+        cancel_current = 1;
+        schedule_rr(); // TODO: Other scheduling algorithms.
         return 0;
     }
     if (!found)
@@ -87,9 +115,29 @@ int mypthread_create(mypthread_t *thread, void *(*fnc)(void *), void *args)
     return 0;
 }
 
+void mypthread_init(long quantum)
+{
+    queue_init(&ready_que);
+    queue_init(&finish_que);
+
+    timer.it_value.tv_sec = quantum / 1000000;
+    timer.it_value.tv_usec = quantum;
+    timer.it_interval.tv_sec = quantum / 1000000;
+    timer.it_interval.tv_usec = quantum;
+    start_timer();
+    signal(SIGVTALRM, schedule_rr);
+    main_thread.id = -1;
+    if (getcontext(&(main_thread.context)) == -)
+    {
+        perror("Can't get current context.");
+        exit(EXIT_FAILURE);
+    }
+    current_running = &main_thread;
+}
+
 void mypthread_yield(void)
 {
     stop_timer();
     start_timer();
-    // TODO: Reschedule.
+    schedule_rr(); // TODO: Other schedule algorithms.
 }
