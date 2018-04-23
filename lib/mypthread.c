@@ -126,8 +126,8 @@ void mypthread_init(long quantum)
     timer.it_interval.tv_usec = quantum;
     start_timer();
     signal(SIGVTALRM, schedule_rr);
-    main_thread.id = -1;
-    if (getcontext(&(main_thread.context)) == -)
+    main_thread.id = -1; // Setting up main context.
+    if (getcontext(&(main_thread.context)) == -1)
     {
         perror("Can't get current context.");
         exit(EXIT_FAILURE);
