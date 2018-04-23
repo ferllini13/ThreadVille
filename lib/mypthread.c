@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <signal.h>
+#include "../include/mypthread.h"
 #include "queue.c"
 
 // TODO: ORGANIZAR TODO EN HEADER
@@ -30,10 +31,10 @@ void stop_timer(void)
     setitimer(ITIMER_VIRTUAL, 0, 0);
 }
 
-void schedule_rr(void)
+void schedule_rr(int signal)
 {
     mypthread_t *prev_thread, *next_thread = NULL;
-    stop_time();
+    stop_timer();
     if (getcontext(&main_context) == -1)
     {
         perror("Can't get current context");
@@ -52,7 +53,7 @@ void schedule_rr(void)
         exit(EXIT_SUCCESS);
     }
     current_running = next_thread;
-    start_time();
+    start_timer();
     if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
         perror("Error while trying to swap context.");
 }
@@ -77,7 +78,7 @@ int mypthread_cancel(mypthread_t *thread)
     if (thread->id == current_running->id)
     {
         cancel_current = 1;
-        schedule_rr(); // TODO: Other scheduling algorithms.
+        schedule_rr(0); // TODO: Other scheduling algorithms.
         return 0;
     }
     if (!found)
@@ -89,7 +90,7 @@ void mypthread_exit(void *return_value)
 {
     current_running->return_value = return_value;
     enqueue(&finish_que, current_running);
-    mypthread_cancel(&current_running);
+    mypthread_cancel(current_running);
 }
 
 void mypthread_run(void *(*fnc)(void *), void *args)
@@ -115,7 +116,7 @@ int mypthread_create(mypthread_t *thread, void *(*fnc)(void *), void *args)
     return 0;
 }
 
-void mypthread_init(long quantum)
+void mypthread_setsched(long quantum)
 {
     queue_init(&ready_que);
     queue_init(&finish_que);
@@ -139,5 +140,5 @@ void mypthread_yield(void)
 {
     stop_timer();
     start_timer();
-    schedule_rr(); // TODO: Other schedule algorithms.
+    schedule_rr(0); // TODO: Other schedule algorithms.
 }

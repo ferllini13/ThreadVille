@@ -1,18 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <ucontext.h>
-
-typedef struct
-{
-    int id;        /* thread id to be used for equality */
-    ucontext_t context; /* variable to store context */
-    void *return_value;  /*to store return value of thread*/
-} mypthread_t;
-
-typedef struct {
-	int lock; /*stores 1 if locked else 0*/
-} mypthread_mutex_t;
+#include "../include/mypthread.h"
 
 typedef struct node
 {
@@ -94,8 +83,8 @@ int remove_node(queue *que, mypthread_t *thread)
             --(que->count);
             return 1;
         }
-    previous_node = current_node;
-    current_node = current_node->next;
+        previous_node = current_node;
+        current_node = current_node->next;
     }
 
     return 0;
@@ -139,7 +128,7 @@ void print_queue(queue *que)
     printf("End of queue\n");
 }
 
-int clean_queue(queue *que)  // TODO: Clean nodes.
+int clean_queue(queue *que) // TODO: Clean nodes.
 {
     node *current_node = que->front;
     while (current_node)
