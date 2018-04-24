@@ -1,20 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
-#include "../include/mypthread.h"
+#include "../include/queue.h"
 
-typedef struct node
-{
-    struct node *next;
-    mypthread_t *data;
-} node;
 
-typedef struct queue
-{
-    node *front;
-    node *back;
-    int count;
-} queue;
 
 void queue_init(queue *que)
 {

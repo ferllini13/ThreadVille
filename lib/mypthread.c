@@ -5,7 +5,7 @@
 #include <sys/time.h>
 #include <signal.h>
 #include "../include/mypthread.h"
-#include "queue.c"
+#include "../include/queue.h"
 
 // TODO: ORGANIZAR TODO EN HEADER
 

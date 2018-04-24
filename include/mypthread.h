@@ -19,7 +19,7 @@ void stop_timer(void);
 void schedule_rr(int);
 int mypthread_cancel(mypthread_t *);
 void mypthread_exit(void *);
-int mypthread_create(mypthread_t *, void *(*)(void *), void *);
+int mypthread_create(mypthread_t *, void* (*)(void *), void *);
 void mypthread_setsched(long );
 
 #endif
