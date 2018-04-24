@@ -7,7 +7,15 @@ typedef struct
     int id;
     ucontext_t context;
     void *return_value;
+    int priority;
+    int *tickets;
 } mypthread_t;
+/**
+ * Tickets are given according to thread's priority:
+ * 3 (Highest): 10 tickets.
+ * 2 (Mid): 5 tickets.
+ * 1 (Low): 1 ticket.
+ **/
 
 typedef struct
 {
@@ -16,10 +24,11 @@ typedef struct
 
 void start_timer(void);
 void stop_timer(void);
-void schedule_rr(int);
+void schedule_rr(void);
+void schedule(int);
 int mypthread_cancel(mypthread_t *);
 void mypthread_exit(void *);
-int mypthread_create(mypthread_t *, void* (*)(void *), void *);
-void mypthread_setsched(long );
+int mypthread_create(mypthread_t *, int, void *(*)(void *), void *);
+void mypthread_setsched(int, long);
 
 #endif
