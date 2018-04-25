@@ -21,10 +21,10 @@ int threads_running = 0;
 
 struct itimerval timer;
 
-void schedule_rr()
+void schedule_rr(void)
 {
     mypthread_t *prev_thread, *next_thread = NULL;
-    setitimer(ITIMER_VIRTUAL, 0, 0);
+    setitimer(ITIMER_VIRTUAL, 0, 0); // Stop time.
     if (getcontext(&main_context) == -1)
     {
         perror("Can't get current context");
@@ -42,9 +42,14 @@ void schedule_rr()
         exit(EXIT_SUCCESS);
     }
     current_running = next_thread;
-    setitimer(ITIMER_VIRTUAL, &timer, 0);
+    setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
     if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
         perror("Error while trying to swap context.");
+}
+
+void schedule_lott(void)
+{
+    // TODO
 }
 
 void schedule(int signal)
@@ -180,4 +185,28 @@ void mypthread_yield(void)
     setitimer(ITIMER_VIRTUAL, 0, 0);
     setitimer(ITIMER_VIRTUAL, &timer, 0);
     schedule(0); // TODO: Other schedule algorithms.
+}
+
+void mymutex_init(mypthread_mutex_t *mutex)
+{
+    mutex->lock = 0; // Unlocked by default.
+}
+
+void mymutex_lock(mypthread_mutex_t *mutex)
+{
+    setitimer(ITIMER_VIRTUAL, 0, 0); // Stop time.
+    while (mutex->lock == 1)
+    {
+        // TODO: Changes for Lottery
+        setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
+        mypthread_yield();
+        setitimer(ITIMER_VIRTUAL, 0, 0); // Stop time.
+    }
+    mutex->lock = 1;
+    setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
+}
+
+void mymutex_unlock(mypthread_mutex_t *mutex)
+{
+    mutex->lock = 0;
 }

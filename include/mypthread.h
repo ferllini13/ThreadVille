@@ -30,5 +30,8 @@ int mypthread_cancel(mypthread_t *);
 void mypthread_exit(void *);
 int mypthread_create(mypthread_t *, int, void *(*)(void *), void *);
 void mypthread_setsched(int, long);
+void mymutex_init(mypthread_mutex_t*);
+void mymutex_lock(mypthread_mutex_t*);
+void mymutex_unlock(mypthread_mutex_t*);
 
 #endif
