@@ -34,7 +34,7 @@ void mypthread_setsched(int, long);
 void mymutex_init(mypthread_mutex_t*);
 int mypthread_join(mypthread_t *, void **);
 void mymutex_lock(mypthread_mutex_t*);
-void mymutex_lock(mypthread_mutex_t *)
+void mymutex_lock(mypthread_mutex_t *);
 void mymutex_unlock(mypthread_mutex_t*);
 
 #endif
