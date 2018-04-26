@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include<time.h>
 #include <sys/time.h>
 #include <signal.h>
 #include <errno.h>
@@ -23,7 +24,32 @@ int threads_running = 0;
 
 struct itimerval timer;
 
-void schedule_rr(void)
+/* ==============================
+ *       UTILITY FUNCTIONS      *
+ * =============================*/
+static int in_list(int ticket, int *list)
+{
+    int found = 0;
+    for (int i = 0; i < ticket_count; ++i)
+    {
+        if (list[i] == ticket)
+            return 1;
+    }
+    return 0;
+}
+
+static int check_winner(mypthread_t *thread, int ticket)
+{
+    if (in_list(ticket, thread->tickets))
+        return 1;
+    else
+        return 0;
+}
+
+/* ==============================
+ *      SCHEDULING FUNCTIONS    *
+ * =============================*/
+static void schedule_rr(void)
 {
     mypthread_t *prev_thread, *next_thread = NULL;
     setitimer(ITIMER_VIRTUAL, 0, 0); // Stop time.
@@ -46,15 +72,59 @@ void schedule_rr(void)
     current_running = next_thread;
     setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
     if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+    {
         perror("Error while trying to swap context.");
+        exit(EXIT_FAILURE);
+    }
 }
 
-void schedule_lott(void)
+static void schedule_lott(void)
 {
-    // TODO
+    mypthread_t *prev_thread, *next_thread = NULL;
+    int is_winner = 0;
+    int winner;
+    if (getcontext(&main_context) == -1)
+    {
+        perror("Can't get current context");
+        exit(EXIT_FAILURE);
+    }
+    prev_thread = current_running;
+    if (!cancel_current)
+        enqueue(&ready_que, prev_thread);
+    else
+        cancel_current = 0;
+    if (queue_len(&ready_que) == 0)
+    {
+        printf("Everything done in ready queue!\n"); // For testing.
+        exit(EXIT_SUCCESS);
+    }
+    while (!is_winner)
+    {
+        winner = (rand() % ticket_count) + 1;
+        for (int i = 0; i < queue_len(&ready_que); ++i)
+        {
+
+            if (check_winner(get_element(&ready_que, i), winner))
+            {
+                printf("Winning ticket: %d belongs to ", winner);
+                next_thread = get_element(&ready_que, i);
+                printf("thread id %d!\n", next_thread->id);
+                remove_node(&ready_que, next_thread);
+                is_winner = 1;
+                break;
+            }
+        }
+    }
+
+    current_running = next_thread;
+    if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+    {
+        perror("Error while trying to swap context.");
+        exit(EXIT_FAILURE);
+    }
 }
 
-void schedule(int signal)
+static void schedule(int signal)
 {
     switch (schedule_algorithm)
     {
@@ -62,7 +132,7 @@ void schedule(int signal)
         schedule_rr();
         break;
     case 1:
-        schedule_rr(); // TODO: Implement lottery ticket scheduling
+        schedule_lott(); // TODO: Implement lottery ticket scheduling
         break;
     }
 }
@@ -141,9 +211,11 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
         {
         case 3:
             tickets = 10;
+            //printf("Thread id %d with priority %d got %d tickets.\n", thread->id, priority, tickets);
             break;
         case 2:
             tickets = 5;
+            //printf("Thread id %d with priority %d got %d tickets.\n", thread->id, priority, tickets);
             break;
         case 1:
             tickets = 1;
@@ -153,6 +225,7 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
         for (int i = 0; i < tickets; ++i)
         {
             tickets_recieved[i] = last_ticket;
+            //printf("Ticket: %d\n", last_ticket);
             last_ticket++;
             ticket_count++;
         }
@@ -175,7 +248,10 @@ void mypthread_setsched(int algorithm, long quantum)
         signal(SIGVTALRM, schedule);
     }
     else if (algorithm == 1)
+    {
         schedule_algorithm = 1;
+        srand(time(0));
+    }
     if (!initialized)
     {
         queue_init(&ready_que);
