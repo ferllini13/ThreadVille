@@ -1,0 +1,7 @@
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/install.dir
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/list_install_components.dir
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/rebuild_cache.dir
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/threadvile.dir
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/install/strip.dir
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/install/local.dir
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/build/CMakeFiles/edit_cache.dir
