@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <signal.h>
+#include <errno.h>
 #include "../include/mypthread.h"
 #include "../include/queue.h"
 
@@ -100,6 +101,12 @@ void mypthread_exit(void *return_value)
     current_running->return_value = return_value;
     enqueue(&finish_que, current_running);
     mypthread_cancel(current_running);
+}
+
+void mypthread_detach(mypthread_t *thread)
+{
+    enqueue(&finish_que, thread);
+    mypthread_cancel(thread);
 }
 
 void mypthread_run(void *(*fnc)(void *), void *args)
@@ -215,7 +222,6 @@ int mypthread_join(mypthread_t *thread, void **ret_val)
                 }
                 else
                     ret_val = selected_thread->return_value;
-                
             }
         }
     }
@@ -234,6 +240,18 @@ void mymutex_lock(mypthread_mutex_t *mutex)
     }
     mutex->lock = 1;
     setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
+}
+
+int mymutex_trylock(mypthread_mutex_t *mutex)
+{
+    if (mutex->lock == 1)
+        return EBUSY;
+    else
+    {
+        setitimer(ITIMER_VIRTUAL, 0, 0); // Stop time.
+        mutex->lock = 1;
+        setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
+    }
 }
 
 void mymutex_unlock(mypthread_mutex_t *mutex)
