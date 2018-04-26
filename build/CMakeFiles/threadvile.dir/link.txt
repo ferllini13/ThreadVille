@@ -1,0 +1,1 @@
+/usr/bin/cc     CMakeFiles/threadvile.dir/main.c.o CMakeFiles/threadvile.dir/src/confReader.c.o CMakeFiles/threadvile.dir/src/city.c.o CMakeFiles/threadvile.dir/src/queues.c.o CMakeFiles/threadvile.dir/src/vehicle.c.o  -o threadvile -rdynamic 

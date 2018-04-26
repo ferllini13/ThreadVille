@@ -1,0 +1,122 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/city.h
+stdio.h
+-
+stdlib.h
+-
+vehicle.h
+-
+queues.h
+-
+
+../include/queues.h
+vehicle.h
+../include/vehicle.h
+stdio.h
+-
+stdlib.h
+-
+
+../include/vehicle.h
+stdio.h
+-
+stdlib.h
+-
+city.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/./include/city.h
+stdio.h
+-
+stdlib.h
+-
+vehicle.h
+-
+queues.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/./include/confReader.h
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/./include/vehicle.h
+stdio.h
+-
+stdlib.h
+-
+city.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/include/city.h
+stdio.h
+-
+stdlib.h
+-
+vehicle.h
+-
+queues.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/include/vehicle.h
+stdio.h
+-
+stdlib.h
+-
+city.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/main.c
+stdio.h
+-
+stdlib.h
+-
+./include/confReader.h
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/./include/confReader.h
+./include/vehicle.h
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/./include/vehicle.h
+./include/city.h
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/./include/city.h
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/src/city.c
+stdlib.h
+-
+unistd.h
+-
+string.h
+-
+../include/city.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/src/confReader.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/src/queues.c
+vehicle.h
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/src/vehicle.h
+stdio.h
+-
+stdlib.h
+-
+city.h
+-
+
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/src/vehicle.c
+stdio.h
+-
+string.h
+-
+../include/vehicle.h
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/include/vehicle.h
+../include/city.h
+/home/luisohz/Dropbox/TEC/11mo Semestre/Principios de Sistemas Operativos/Proyectos/01/Ferllini/ThreadVille/include/city.h
+

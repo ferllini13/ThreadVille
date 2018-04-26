@@ -1,61 +1,101 @@
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <../include/city.h>
-
 int regularPathWeight = 5;
 int highwayWeight = 1;
 
-//***NODE******************************************************************************************
+
+//***NODES*****************************************************************************************
+//Struct defining each road node in the map
+typedef struct NODE {
+	int id;
+	char *name;
+	struct vehicle *V[V5];
+	struct NODE *nextStraight; // Next node straight direction
+	struct NODE *nextRight; // Next node to the right
+	int pathWeight;
+}NODE;
+
+//Create nodes with the id, name and pathWeight
 NODE* createNode(int id, char *name, int pathWeight){
-	NODE *node = (NODE *)calloc(1, sizeof(NODE));
+	NODE *node = (NODE *)calloc(sizeof(NODE));
 	node->id = id;
 	node->name = strdup(name);
 	node->pathWeight = pathWeight;
-
-	for(int i = 0; i < 5; i++){
-		node->Vehicles[i] = NULL;
-	}
 	return node;
 }
 //*************************************************************************************************
 
+
 //***HIGHWAY***************************************************************************************
+//Struct defining each highway node in the map
+typedef struct HIGHWAY {
+	int id;
+	char *name;
+	struct vehicle *V[V20];
+	struct ROUNDABOUT *nextNode; // Next node
+	int pathWeight;
+}HIGHWAY;
+
 //Create highway with the id, name and pathWeight
 HIGHWAY* createHighway(int id, char *name, int pathWeight){
-	HIGHWAY *highway = (HIGHWAY *)calloc(1, sizeof(HIGHWAY));
+	HIGHWAY *highway = (HIGHWAY *)calloc(sizeof(HIGHWAY));
 	highway->id = id;
 	highway->name = strdup(name);
 	highway->pathWeight = pathWeight;
-	for(int i = 0; i < 5; i++){
-		highway->Vehicles[i] = NULL;
-	}
 	return highway;
 }
 //*************************************************************************************************
 
+
 //***ROUNDABOUT************************************************************************************
+//Struct defining each roundabout node
+typedef struct ROUNDABOUT {
+	char *name;
+	int id;
+	struct vehicle *V[V15]; 
+	struct NODE *nextStraight; // Next node straight direction, going to D1
+	struct HIGHWAY *nextRight1; // Next node to the right, going to highway
+	struct HIGHWAY *nextRight2; // Next node to the right, going to highway
+	//struct NODE *nextLeft1; // Next node to the left, going to Y
+	//struct NODE *nextLeft2; // Next node to the left, reentering into de roundabout
+	int pathWeight;
+}ROUNDABOUT;
+
 //Create Roundabout nodes with the id, name and pathWeight
 ROUNDABOUT* createRoundabout(int id, char *name, int pathWeight){
-	ROUNDABOUT *roundabout = (ROUNDABOUT *)calloc(1, sizeof(ROUNDABOUT));
+	ROUNDABOUT *roundabout = (ROUNDABOUT *)calloc(sizeof(ROUNDABOUT));
 	roundabout->id = id;
 	roundabout->name = strdup(name);
 	roundabout->pathWeight = pathWeight;
-	for(int i = 0; i < 5; i++){
-		roundabout->Vehicles[i] = NULL;
-	}
 	return roundabout;
 }
 //*************************************************************************************************
 
-//***BRIDGE****************************************************************************************
+
+//***BRIDGES***************************************************************************************
+//Struct defining bridges
+typedef struct BRIDGE {
+	char *name;
+	int id;
+	struct vehicle *V[V5];
+	struct pqueu westQueue;
+	struct pqueu eastQueue;
+	struct NODE *nextEast; // Next node straight direction East
+	struct NODE *nextWest; // Next node straight direction West
+	int pathWeight;
+	int type;
+	int flagEast;
+	int flagWest;
+	int timeOut;
+	int K; //Amount of cars waiting
+	int empty;
+}BRIDGE;
+
 void manageBridge(BRIDGE* bridge){
 	if ((*bridge).type==1){
 		while (1){
-			if((*bridge).eastQueue.size==7&&(*bridge).empty){
+			if((*bridge).eastQueue.size==7&&(bridge).empty){
 				bridge->flagEast=1;	
 			}
-			else if((*bridge).westQueue.size==7&&(*bridge).empty){
+			else if((*bridge).westQueue.size==7&&(bridge).empty){
 				bridge->flagEast=0;	
 			}
 		}
@@ -76,8 +116,8 @@ void manageBridge(BRIDGE* bridge){
 	}
 }
 
-BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, int K){
-	BRIDGE *bridge = (BRIDGE *)calloc(1, sizeof(BRIDGE));
+BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, int k){
+	BRIDGE *bridge = (BRIDGE *)calloc(sizeof(BRIDGE));
 	bridge->type=type;
 	bridge->timeOut=timeOut;
 	bridge->K=K;
@@ -85,11 +125,16 @@ BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, 
 	bridge->flagEast=0;
 	bridge->flagWest=0;
 	for (int i = 0; i < 5; i++){
-		bridge->Vehicles[i] = NULL;
+		bridge->V[i]=NULL;
 	}
-	return bridge;
+	return bridge
 }
+
 //*************************************************************************************************
+
+
+NODE* stopsList[98]; //List with the stop positions of the map
+
 
 //***Defining streets*********************************
 //Nodes from A
@@ -275,16 +320,13 @@ BRIDGE *bridge2;
 BRIDGE *bridge3;
 
 
-NODE* init(){
+void init(){
 
 	//***Defining streets*********************************
 	//Nodes from A
 	nodeA14 = createNode(1, "nodeA14", regularPathWeight);
 	nodeA21 = createNode(2, "nodeA21", regularPathWeight);
 	nodeA32 = createNode(3, "nodeA32", regularPathWeight);
-
-	// int ID = nodeA14->id;
-	// printf("nodeA14 %d\n\n", ID);
 
 	//Node from AB
 	nodeA43B12 = createNode(4, "nodeA43B12", regularPathWeight);
@@ -728,5 +770,4 @@ NODE* init(){
 	//Highway NS2
 	highwayNS2->nextNode = roundaboutY;
 
-	return nodeA14;
 }

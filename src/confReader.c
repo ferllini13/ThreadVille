@@ -6,7 +6,7 @@
 
 
 
-void readConfigFile(int *expD, double * speed ,int * traficC, double * semaphE, double * semaphW, int *amount, int *ambulance, int *radio , int *schedule ){
+void readConfigFile(int *expD, float* speed ,int * traficC, float * semaphE, float * semaphW, int *amount, int *ambulance, int *radio , int *schedule ){
     FILE * fp;    
 
     fp = fopen(CONFIG_FILE_NAME, "r");
@@ -25,24 +25,24 @@ void readConfigFile(int *expD, double * speed ,int * traficC, double * semaphE, 
                 continue;
             else{
                 sscanf(line, "%s = %s", key, value);
-                if(strcmp(key, "EXPONENTIAL_DISTRIBUTION") == 0){  //Read the CPUthreshold
-                    sscanf(value, "%lf", &(*expD));
-                } else if(strcmp(key, "CARS_SPEED") == 0){  //Read the Memthreshold
-                    sscanf(value, "%lf", &(*speed));
-                } else if(strcmp(key, "TRAFFIC_CONTROL") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*traficC));
-                } else if(strcmp(key, "SEMAPHORE_EAST_TIME") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*semaphE));
-                } else if(strcmp(key, "SEMAPHORE_WEST_TIME") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*semaphW));
-                } else if(strcmp(key, "AMOUNT_CARS") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*amount));
-                } else if(strcmp(key, "AMBULANCE_PERCENT") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*ambulance));
-                } else if(strcmp(key, "RADIOACTIVE_PERCENT") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*radio));
-                } else if(strcmp(key, "SCHEDULING_METHOD") == 0){  //Read the SYNthreshold
-                    sscanf(value, "%lf", &(*schedule));
+                if(strcmp(key, "EXPONENTIAL_DISTRIBUTION") == 0){  //Read the EXPONENTIAL_DISTRIBUTION
+                    sscanf(value, "%d", expD);
+                } else if(strcmp(key, "CARS_SPEED") == 0){  //Read the CARS_SPEED
+                    sscanf(value, "%f", speed);
+                } else if(strcmp(key, "TRAFFIC_CONTROL") == 0){  //Read the TRAFFIC_CONTROL
+                    sscanf(value, "%d", traficC);
+                } else if(strcmp(key, "SEMAPHORE_EAST_TIME") == 0){  //Read the SEMAPHORE_EAST_TIME
+                    sscanf(value, "%f", semaphE);
+                } else if(strcmp(key, "SEMAPHORE_WEST_TIME") == 0){  //Read the SEMAPHORE_WEST_TIME
+                    sscanf(value, "%f", semaphW);
+                } else if(strcmp(key, "AMOUNT_CARS") == 0){  //Read the AMOUNT_CARS
+                    sscanf(value, "%d", amount);
+                } else if(strcmp(key, "AMBULANCE_PERCENT") == 0){  //Read the AMBULANCE_PERCENT
+                    sscanf(value, "%d", ambulance);
+                } else if(strcmp(key, "RADIOACTIVE_PERCENT") == 0){  //Read the RADIOACTIVE_PERCENT
+                    sscanf(value, "%d", radio);
+                } else if(strcmp(key, "SCHEDULING_METHOD") == 0){  //Read the SCHEDULING_METHOD
+                    sscanf(value, "%d", schedule);
                 }
 
             }
