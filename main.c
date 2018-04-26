@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "./include/confReader.h"
@@ -75,9 +76,6 @@ int main(int argc, char const *argv[]){
 
 	struct vehicle *car;
 	car = create(0, 1, 2, 0, 0, actualNode, rute6, "", "", "nodeA43B12");
-
 	move(car);
-
-
 	return 0;
 }
