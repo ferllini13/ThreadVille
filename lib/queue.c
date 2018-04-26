@@ -56,8 +56,8 @@ int remove_node(queue *que, mypthread_t *thread)
 {
     node *current_node = que->front;
     node *previous_node = NULL;
-    if (current_node == NULL)
-        return -1;
+    if (current_node == NULL || que->count == 0)
+        return 0;
     while (current_node)
     {
         if (current_node->data->id == thread->id)

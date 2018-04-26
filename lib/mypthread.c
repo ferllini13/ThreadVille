@@ -7,7 +7,8 @@
 #include "../include/mypthread.h"
 #include "../include/queue.h"
 
-int schedule_algorithm; // 0: Round Robin, 1: Lottery, 2: Real Time
+int schedule_algorithm; // 0: Round Robin, 1: Lottery, 2: Real
+int initialized = 0;
 int ticket_count = 0;
 
 ucontext_t main_context;
@@ -86,7 +87,7 @@ int mypthread_cancel(mypthread_t *thread)
     if (thread->id == current_running->id)
     {
         cancel_current = 1;
-        schedule(0); // TODO: Other scheduling algorithms.
+        schedule(0);
         return 0;
     }
     if (!found)
@@ -131,17 +132,17 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
         int last_ticket = ticket_count + 1;
         switch (priority)
         {
-            case 3:
-                tickets = 10;
-                break;
-            case 2:
-                tickets = 5;
-                break;
-            case 1:
-                tickets = 1;
-                break;
+        case 3:
+            tickets = 10;
+            break;
+        case 2:
+            tickets = 5;
+            break;
+        case 1:
+            tickets = 1;
+            break;
         }
-        int *tickets_recieved = (int*)malloc(sizeof(int) * tickets);
+        int *tickets_recieved = (int *)malloc(sizeof(int) * tickets);
         for (int i = 0; i < tickets; ++i)
         {
             tickets_recieved[i] = last_ticket;
@@ -156,9 +157,6 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
 
 void mypthread_setsched(int algorithm, long quantum)
 {
-    queue_init(&ready_que);
-    queue_init(&finish_que);
-
     if (algorithm == 0)
     {
         schedule_algorithm = 0;
@@ -171,25 +169,57 @@ void mypthread_setsched(int algorithm, long quantum)
     }
     else if (algorithm == 1)
         schedule_algorithm = 1;
-    main_thread.id = -1; // Setting up main context.
-    if (getcontext(&(main_thread.context)) == -1)
+    if (!initialized)
     {
-        perror("Can't get current context.");
-        exit(EXIT_FAILURE);
+        queue_init(&ready_que);
+        queue_init(&finish_que);
+        main_thread.id = -1; // Setting up main context.
+        if (getcontext(&(main_thread.context)) == -1)
+        {
+            perror("Can't get current context.");
+            exit(EXIT_FAILURE);
+        }
+        current_running = &main_thread;
+        initialized = 1;
     }
-    current_running = &main_thread;
 }
 
 void mypthread_yield(void)
 {
     setitimer(ITIMER_VIRTUAL, 0, 0);
     setitimer(ITIMER_VIRTUAL, &timer, 0);
-    schedule(0); // TODO: Other schedule algorithms.
+    schedule(0);
 }
 
 void mymutex_init(mypthread_mutex_t *mutex)
 {
     mutex->lock = 0; // Unlocked by default.
+}
+
+int mypthread_join(mypthread_t *thread, void **ret_val)
+{
+    if (thread == current_running)
+        return 1;
+    mypthread_t *selected_thread;
+    while (1)
+    {
+        for (int i = 0; i < queue_len(&finish_que); ++i)
+        {
+            selected_thread = get_element(&finish_que, i);
+            if (thread->id == selected_thread->id)
+            {
+                if (!remove_node(&finish_que, selected_thread))
+                {
+                    ret_val = 0;
+                    return 1;
+                }
+                else
+                    ret_val = selected_thread->return_value;
+                
+            }
+        }
+    }
+    mypthread_yield();
 }
 
 void mymutex_lock(mypthread_mutex_t *mutex)
