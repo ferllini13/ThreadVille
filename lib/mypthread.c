@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include<time.h>
+#include <time.h>
 #include <sys/time.h>
 #include <signal.h>
 #include <errno.h>
@@ -269,8 +269,11 @@ void mypthread_setsched(int algorithm, long quantum)
 
 void mypthread_yield(void)
 {
-    setitimer(ITIMER_VIRTUAL, 0, 0);
-    setitimer(ITIMER_VIRTUAL, &timer, 0);
+    if (schedule_algorithm == 0)
+    {
+        setitimer(ITIMER_VIRTUAL, 0, 0);
+        setitimer(ITIMER_VIRTUAL, &timer, 0);
+    }
     schedule(0);
 }
 
@@ -286,6 +289,7 @@ int mypthread_join(mypthread_t *thread, void **ret_val)
     mypthread_t *selected_thread;
     while (1)
     {
+        printf("Queue length: %d\n", queue_len(&finish_que));
         for (int i = 0; i < queue_len(&finish_que); ++i)
         {
             selected_thread = get_element(&finish_que, i);
