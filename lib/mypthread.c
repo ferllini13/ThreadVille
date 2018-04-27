@@ -40,6 +40,8 @@ static int in_list(int ticket, int *list)
 
 static int check_winner(mypthread_t *thread, int ticket)
 {
+    if (thread->id == -1)
+        return 0;
     if (in_list(ticket, thread->tickets))
         return 1;
     else
@@ -103,20 +105,23 @@ static void schedule_lott(void)
         winner = (rand() % ticket_count) + 1;
         for (int i = 0; i < queue_len(&ready_que); ++i)
         {
-
-            if (check_winner(get_element(&ready_que, i), winner))
+            if (queue_len(&ready_que) != 0)
             {
-                printf("Winning ticket: %d belongs to ", winner);
-                next_thread = get_element(&ready_que, i);
-                printf("thread id %d!\n", next_thread->id);
-                remove_node(&ready_que, next_thread);
-                is_winner = 1;
-                break;
+                if (check_winner(get_element(&ready_que, i), winner))
+                {
+                    printf("Winning ticket: %d belongs to ", winner);
+                    next_thread = get_element(&ready_que, i);
+                    printf("thread id %d!\n", next_thread->id);
+                    remove_node(&ready_que, next_thread);
+                    is_winner = 1;
+                    break;
+                }
             }
         }
     }
 
     current_running = next_thread;
+    printf("Finish queue length: %d\n", queue_len(&finish_que));
     if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
     {
         perror("Error while trying to swap context.");
@@ -203,6 +208,7 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
     thread->context.uc_stack.ss_size = SIGSTKSZ;
 
     makecontext(&(thread->context), (void (*)())mypthread_run, 2, fnc, args);
+    ++threads_running;
     if (schedule_algorithm == 1)
     {
         int tickets;
@@ -230,6 +236,12 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
             ticket_count++;
         }
         thread->tickets = tickets_recieved;
+        printf("Thread id %d with tickets: ", thread->id);
+        for (int i = 0; i < tickets; ++i)
+        {
+            printf("%d ", thread->tickets[i]);
+        }
+        printf("\n");
     }
     enqueue(&ready_que, thread);
     return 0;
@@ -286,10 +298,16 @@ int mypthread_join(mypthread_t *thread, void **ret_val)
 {
     if (thread == current_running)
         return 1;
+    if (schedule_algorithm == 1 && (queue_len(&finish_que) <= threads_running))
+    {
+        printf("Scheduling...\n");
+        schedule_lott();
+        printf("Terminamos perrito.\n");
+        return 1;
+    }
     mypthread_t *selected_thread;
     while (1)
     {
-        printf("Queue length: %d\n", queue_len(&finish_que));
         for (int i = 0; i < queue_len(&finish_que); ++i)
         {
             selected_thread = get_element(&finish_que, i);
