@@ -354,7 +354,7 @@ int main(int argc, char const *argv[]){
 
 
     pthread_t spm;
-    pthread_create(&smp,NULL,(void *)&manageSemaphore,NULL);
+    pthread_create(&spm,NULL,(void *)&manageSemaphore,NULL);
 
 
 
