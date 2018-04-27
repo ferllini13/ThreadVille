@@ -20,7 +20,7 @@ String subInstring;
 
 void loop() {
    if (Serial.available() > 0) {
-      inString = Serial.readStriGng();
+      inString = Serial.readString();
       Serial.print(inString);
       for(int i=0;i<NUMPIXELS;i++){
         subInstring=inString.substring(i,i+1);
