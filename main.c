@@ -20,7 +20,7 @@ int main(int argc, char const *argv[]){
 	int schedule;
 	char *port;
 
-	readConfigFile(&expD, &speed, &traficC, &semaphE, &semaphW, &amount, &ambulance, &radio, &schedule,port);
+	//readConfigFile(&expD, &speed, &traficC, &semaphE, &semaphW, &amount, &ambulance, &radio, &schedule,port);
 	// printf("expD: % d\n", expD);
 	// printf("speed: % f\n", speed);
 	// printf("traficC: % d\n", traficC);
