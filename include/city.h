@@ -87,6 +87,7 @@ NODE* init();
 
 void draw();
 void updateBridges(char * data);
+void manageSemaphore();
 
 
 

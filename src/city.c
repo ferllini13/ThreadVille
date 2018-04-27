@@ -764,7 +764,7 @@ int fd;
 void draw(){
 	char * data=(char *)calloc(64,sizeof(char));
     initmat(data);
-    fd=intitSerial("/dev/ttyACM3");
+    fd=intitSerial("/dev/ttyACM4");
     data[48]='G';
     data[54]='G';
 
@@ -837,12 +837,12 @@ void updateBridges(char * data){
 			writeSerial(data,fd);
 }
  
-
+/*
  void manageOfficer(){
 	 
 
  }
-
+*/
 
  void manageSemaphore(){
  	int temp;

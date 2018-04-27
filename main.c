@@ -18,8 +18,9 @@ int main(int argc, char const *argv[]){
 	int ambulance; 
 	int radio;
 	int schedule;
+	char *port;
 
-	readConfigFile(&expD, &speed, &traficC, &semaphE, &semaphW, &amount, &ambulance, &radio, &schedule);
+	readConfigFile(&expD, &speed, &traficC, &semaphE, &semaphW, &amount, &ambulance, &radio, &schedule,port);
 	// printf("expD: % d\n", expD);
 	// printf("speed: % f\n", speed);
 	// printf("traficC: % d\n", traficC);
@@ -29,6 +30,7 @@ int main(int argc, char const *argv[]){
 	// printf("ambulance: % d\n", ambulance);
 	// printf("radio: % d\n", radio);
 	// printf("schedule: % d\n", schedule);
+	// printf("port: %s\n", port);
 
 	struct NODE *actualNode;
 
@@ -351,11 +353,15 @@ int main(int argc, char const *argv[]){
     pthread_create(&brg,NULL,(void *)&draw,NULL);
 
 
+    pthread_t spm;
+    pthread_create(&smp,NULL,(void *)&manageSemaphore,NULL);
+
+
+
 	pthread_t t1;
     pthread_t t2;
     pthread_t t3;
     pthread_t t4;
-
     
    	
    	pthread_create(&t1,NULL,(void *)&move,(void *)car);
@@ -363,11 +369,6 @@ int main(int argc, char const *argv[]){
     pthread_create(&t3,NULL,(void *)&move,(void *)car3);
     pthread_create(&t4,NULL,(void *)&move,(void *)car4);
 	pthread_exit(NULL);
-
-	
-
-
-
 
 
 	return 0;

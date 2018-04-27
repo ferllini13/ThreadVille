@@ -6,7 +6,7 @@
 
 
 
-void readConfigFile(int *expD, float* speed ,int * traficC, float * semaphE, float * semaphW, int *amount, int *ambulance, int *radio , int *schedule ){
+void readConfigFile(int *expD, float* speed ,int * traficC, float * semaphE, float * semaphW, int *amount, int *ambulance, int *radio , int *schedule, char *port ){
     FILE * fp;    
 
     fp = fopen(CONFIG_FILE_NAME, "r");
@@ -43,6 +43,8 @@ void readConfigFile(int *expD, float* speed ,int * traficC, float * semaphE, flo
                     sscanf(value, "%d", radio);
                 } else if(strcmp(key, "SCHEDULING_METHOD") == 0){  //Read the SCHEDULING_METHOD
                     sscanf(value, "%d", schedule);
+                } else if(strcmp(key, "PORT_VALUE") == 0){       //Identify the LOGFILE path
+                    strncpy(port,value, 255);
                 }
 
             }
@@ -51,5 +53,3 @@ void readConfigFile(int *expD, float* speed ,int * traficC, float * semaphE, flo
     }
     
 }
-
-

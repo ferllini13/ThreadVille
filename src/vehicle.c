@@ -256,15 +256,71 @@ void move(vehicle * car){
 			if(cmpRY == 0 || cmpRZ == 0){ //From road to roundabout
 
 			} else if(cmpB1 == 0 || cmpB2 == 0 || cmpB3 == 0){ //From road to bridge
-
+				int direction = 0;
 				if(cmpB1E == 0 && car->actualNode->nextBridge->flagEast == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[0] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextWest->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
+
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[0] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -280,13 +336,68 @@ void move(vehicle * car){
 
 				} else if(cmpB1W == 0 && car->actualNode->nextBridge->flagWest == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[4] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextEast->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
 
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[4] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -302,12 +413,70 @@ void move(vehicle * car){
 
 				} else if(cmpB2E == 0 && car->actualNode->nextBridge->flagEast == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[0] == NULL){
+					
+
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextWest->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
+
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[0] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -323,13 +492,68 @@ void move(vehicle * car){
 
 				} else if(cmpB2W == 0 && car->actualNode->nextBridge->flagWest == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[4] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextEast->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
 
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[4] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -345,13 +569,69 @@ void move(vehicle * car){
 
 				} else if(cmpB3E == 0 && car->actualNode->nextBridge->flagEast == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[0] == NULL){
 
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextWest->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
+
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[0] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -367,13 +647,68 @@ void move(vehicle * car){
 
 				} else if(cmpB3W == 0 && car->actualNode->nextBridge->flagWest == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[4] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextEast->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
 
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[4] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -389,21 +724,6 @@ void move(vehicle * car){
 				}
 
 				printf("***************************************************BRIDGE\n");
-
-				//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-				//writeSerial(data, "/dev/ttyACM0");
-
-
-			// } else if(cmpHSN1 == 0 || cmpHSN2 == 0 || cmpHNS1 == 0 || cmpHNS2 == 0){
-
-			// 	if(car->actualNodeR->nextRight1->Vehicles[0] == NULL){
-			// 		car->actualNodeR->nextRight1->Vehicles[0] = car;
-			// 		car->actualNodeR->Vehicles[0] = NULL;
-			// 		car->position = 0;
-			// 		car->actualNodeR = NULL;
-			// 		car->actualNodeH = car->actualNodeR->nextRight1;
-			// 	}
-
 			
 			} else { //From road to road
 
@@ -803,16 +1123,72 @@ void move(vehicle * car){
 			if(cmpRY == 0 || cmpRZ == 0){ //From road to roundabout
 
 			} else if(cmpB1 == 0 || cmpB2 == 0 || cmpB3 == 0){ //From road to bridge
-
+				int direction = 0;
 				if(cmpB1E == 0 && car->actualNode->nextBridge->flagEast == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[0] == NULL){
-						car->actualNode->nextBridge->Vehicles[0] = car;
-						car->actualNode->Vehicles[4] = NULL;
-						car->position = 0;
-						car->actualNodeB = car->actualNode->nextBridge;
-						car->actualNode = NULL;
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextWest->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
 					}
+
+					if(direction == 1){
+							car->actualNode->nextBridge->Vehicles[0] = car;
+							car->actualNode->Vehicles[4] = NULL;
+							car->position = 0;
+							car->actualNodeB = car->actualNode->nextBridge;
+							car->actualNode = NULL;
+							direction = 0;
+						}
 
 					//Update the rute information
 					car->nextNode = car->rute.move;
@@ -827,13 +1203,69 @@ void move(vehicle * car){
 
 				} else if(cmpB1W == 0 && car->actualNode->nextBridge->flagWest == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[4] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextEast->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
 
+					}
+
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[4] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -849,12 +1281,69 @@ void move(vehicle * car){
 
 				} else if(cmpB2E == 0 && car->actualNode->nextBridge->flagEast == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[0] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextWest->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+
+					}
+
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[0] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -870,13 +1359,68 @@ void move(vehicle * car){
 
 				} else if(cmpB2W == 0 && car->actualNode->nextBridge->flagWest == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[4] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextEast->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
 
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[4] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -892,13 +1436,68 @@ void move(vehicle * car){
 
 				} else if(cmpB3E == 0 && car->actualNode->nextBridge->flagEast == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[0] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextWest->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
 
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[0] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -914,13 +1513,68 @@ void move(vehicle * car){
 
 				} else if(cmpB3W == 0 && car->actualNode->nextBridge->flagWest == 1){
 
-					if(car->actualNode->nextBridge->Vehicles[4] == NULL){
+					if(car->actualNode->nextBridge->Vehicles[0] == NULL &&
+						car->actualNode->nextBridge->Vehicles[1] == NULL &&
+						car->actualNode->nextBridge->Vehicles[2] == NULL &&
+						car->actualNode->nextBridge->Vehicles[3] == NULL &&
+						car->actualNode->nextBridge->Vehicles[4] == NULL){
+						direction = 1;
+					} else {
+						char* myDirection = car->actualNode->nextBridge->nextEast->name;
+						if(car->actualNode->nextBridge->Vehicles[0] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[0]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[1] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[1]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[2] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[2]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[3] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[3]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+						else if(car->actualNode->nextBridge->Vehicles[4] != NULL){
+							char* otherCarDirection = car->actualNode->nextBridge->Vehicles[4]->nextNode;
+							int cmpDirections = strcmp(otherCarDirection, myDirection); //0 is =
+							if(cmpDirections == 0){
+								direction = 1;
+							} else {
+								direction = 0;
+							}
+						}
+					}
 
+					if(direction == 1){
 						car->actualNode->nextBridge->Vehicles[4] = car;
 						car->actualNode->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNodeB = car->actualNode->nextBridge;
 						car->actualNode = NULL;
+						direction = 0;
 					}
 
 					//Update the rute information
@@ -936,20 +1590,6 @@ void move(vehicle * car){
 				}
 
 				printf("***************************************************BRIDGE\n");
-
-				//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-				//writeSerial(data, "/dev/ttyACM0");
-
-			// } else if(cmpHSN1 == 0 || cmpHSN2 == 0 || cmpHNS1 == 0 || cmpHNS2 == 0){
-
-			// 	if(car->actualNodeR->nextRight1->Vehicles[0] == NULL){
-			// 		car->actualNodeR->nextRight1->Vehicles[0] = car;
-			// 		car->actualNodeR->Vehicles[0] = NULL;
-			// 		car->position = 0;
-			// 		car->actualNodeR = NULL;
-			// 		car->actualNodeH = car->actualNodeR->nextRight1;
-			// 	}
-
 			
 			} else { //From road to road
 
