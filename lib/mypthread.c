@@ -9,7 +9,7 @@
 #include "../include/mypthread.h"
 #include "../include/queue.h"
 
-int schedule_algorithm; // 0: Round Robin, 1: Lottery, 2: Real
+int schedule_algorithm = -1; // 0: Round Robin, 1: Lottery, 2: Real
 int initialized = 0;
 int ticket_count = 0;
 int is_done = 0;
@@ -68,10 +68,7 @@ static void schedule_rr(void)
         cancel_current = 0;
     next_thread = dequeue(&ready_que);
     if (next_thread == NULL)
-    {
-        printf("Everything done in ready queue!\n"); // For testing.
         exit(EXIT_SUCCESS);
-    }
     current_running = next_thread;
     setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
     if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
@@ -97,10 +94,7 @@ static void schedule_lott(void)
     else
         cancel_current = 0;
     if (queue_len(&ready_que) == 0)
-    {
-        printf("Everything done in ready queue!\n"); // For testing.
         exit(EXIT_SUCCESS);
-    }
     while (!is_winner)
     {
         winner = (rand() % ticket_count) + 1;
@@ -136,10 +130,7 @@ static void schedule_lott(void)
         }
     }
     else
-    {
-        printf("Everything done in ready queue!\n"); // For testing.
         exit(EXIT_SUCCESS);
-    }
 }
 
 static void schedule(int signal)
@@ -205,6 +196,9 @@ void mypthread_run(void *(*fnc)(void *), void *args)
 
 int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), void *args)
 {
+    if (schedule_algorithm == -1 )
+        mypthread_setsched(0, 10);
+    
     if (!(schedule_algorithm == 0 || schedule_algorithm == 1 || schedule_algorithm == 2))
     {
         printf("Error: No scheduling algorithm specified.\n");
