@@ -79,7 +79,7 @@ BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, 
 }
 
 void manageBridge(BRIDGE* bridge){
-	if ((*bridge).type==1){ //Transit officer
+	if ((*bridge).type==79){ //Transit officer
 		while (1){
 			if((*bridge).eastQueue.size == 7 && (*bridge).empty){
 				bridge->flagEast=1;	
@@ -90,7 +90,7 @@ void manageBridge(BRIDGE* bridge){
 		}
 
 	}
-	else if ((*bridge).type==2){ //Timeout
+	else if ((*bridge).type==80){ //Timeout
 		while (1){
 			int temp;
 			sleep((*bridge).timeOut);
@@ -749,9 +749,13 @@ NODE* init(){
 	// manageBridge(bridge3);
 
 	bridge1->flagEast = 1;
-	bridge2->flagWest = 1;
-	bridge3->flagEast = 1;
+	//bridge1->flagWest = 0;
 
+	bridge2->flagWest = 1;
+	
+	bridge3->flagEast = 1;
+	bridge3->flagWest = 1;
+	
 	return nodeA14;
 }
 
@@ -760,7 +764,7 @@ int fd;
 void draw(){
 	char * data=(char *)calloc(64,sizeof(char));
     initmat(data);
-    fd=intitSerial("/dev/ttyACM0");
+    fd=intitSerial("/dev/ttyACM3");
     data[48]='G';
     data[54]='G';
 
@@ -772,36 +776,80 @@ void draw(){
 
 
 void updateBridges(char * data){
+				
+			//puente 1			
 			data[1]=bridge1->Vehicles[0]!=NULL?bridge1->Vehicles[0]->color[0]:'N';
 			data[2]=bridge1->Vehicles[1]!=NULL?bridge1->Vehicles[1]->color[0]:'N';
 			data[3]=bridge1->Vehicles[2]!=NULL?bridge1->Vehicles[2]->color[0]:'N';
 			data[4]=bridge1->Vehicles[3]!=NULL?bridge1->Vehicles[3]->color[0]:'N';
 			data[5]=bridge1->Vehicles[4]!=NULL?bridge1->Vehicles[4]->color[0]:'N';
+			//colas punete 1
+			data[10]=nodeI14->Vehicles[2]!=NULL?nodeI14->Vehicles[2]->color[0]:'N';
+			data[9]=nodeI14->Vehicles[3]!=NULL?nodeI14->Vehicles[3]->color[0]:'N';
+			data[8]=nodeI14->Vehicles[4]!=NULL?nodeI14->Vehicles[4]->color[0]:'N';
+			
+			data[14]=nodeD32->Vehicles[4]!=NULL?nodeD32->Vehicles[4]->color[0]:'N';
+			data[13]=nodeD32->Vehicles[3]!=NULL?nodeD32->Vehicles[3]->color[0]:'N';
+			data[12]=nodeD32->Vehicles[2]!=NULL?nodeD32->Vehicles[2]->color[0]:'N';
 
+
+			//puente 2
 			data[25]=bridge2->Vehicles[0]!=NULL?bridge2->Vehicles[0]->color[0]:'N';
 			data[26]=bridge2->Vehicles[1]!=NULL?bridge2->Vehicles[1]->color[0]:'N';
 			data[27]=bridge2->Vehicles[2]!=NULL?bridge2->Vehicles[2]->color[0]:'N';
 			data[28]=bridge2->Vehicles[3]!=NULL?bridge2->Vehicles[3]->color[0]:'N';
 			data[29]=bridge2->Vehicles[4]!=NULL?bridge2->Vehicles[4]->color[0]:'N';
+			//colas punete 2
+			data[34]=nodeO14->Vehicles[2]!=NULL?nodeO14->Vehicles[2]->color[0]:'N';
+			data[33]=nodeO14->Vehicles[3]!=NULL?nodeO14->Vehicles[3]->color[0]:'N';
+			data[32]=nodeO14->Vehicles[4]!=NULL?nodeO14->Vehicles[4]->color[0]:'N';
 			
+			data[38]=nodeJ32->Vehicles[4]!=NULL?nodeJ32->Vehicles[4]->color[0]:'N';
+			data[37]=nodeJ32->Vehicles[3]!=NULL?nodeJ32->Vehicles[3]->color[0]:'N';
+			data[36]=nodeJ32->Vehicles[2]!=NULL?nodeJ32->Vehicles[2]->color[0]:'N';
+
+
+
+			//puente 3
 			data[49]=bridge3->Vehicles[0]!=NULL?bridge3->Vehicles[0]->color[0]:'N';
 			data[50]=bridge3->Vehicles[1]!=NULL?bridge3->Vehicles[1]->color[0]:'N';
 			data[51]=bridge3->Vehicles[2]!=NULL?bridge3->Vehicles[2]->color[0]:'N';
 			data[52]=bridge3->Vehicles[3]!=NULL?bridge3->Vehicles[3]->color[0]:'N';
 			data[53]=bridge3->Vehicles[4]!=NULL?bridge3->Vehicles[4]->color[0]:'N';
+			//colas puente 3
+			data[58]=nodeU14->Vehicles[2]!=NULL?nodeU14->Vehicles[2]->color[0]:'N';
+			data[57]=nodeU14->Vehicles[3]!=NULL?nodeU14->Vehicles[3]->color[0]:'N';
+			data[56]=nodeU14->Vehicles[4]!=NULL?nodeU14->Vehicles[4]->color[0]:'N';
 			
+			data[62]=nodeP32->Vehicles[4]!=NULL?nodeP32->Vehicles[4]->color[0]:'N';
+			data[61]=nodeP32->Vehicles[3]!=NULL?nodeP32->Vehicles[3]->color[0]:'N';
+			data[60]=nodeP32->Vehicles[2]!=NULL?nodeP32->Vehicles[2]->color[0]:'N';
 
+
+			//official
 			data[0]=(*bridge1).flagEast==1? 'G': 'R';
 			data[6]=(*bridge1).flagWest==1? 'G': 'R';
-			
+			//semaphoros
 			data[24]=(*bridge2).flagEast==1? 'G': 'R';
 			data[30]=(*bridge2).flagWest==1? 'G': 'R';
 
+			//send arduino
 			writeSerial(data,fd);
-
-
 }
+ 
+
+ void manageOfficer(){
+	 
+
+ }
 
 
-
-    
+ void manageSemaphore(){
+ 	int temp;
+ 	while(1){	
+		sleep((*bridge2).timeOut);
+		temp=bridge2->flagEast;
+		bridge2->flagEast=bridge2->flagWest;
+		bridge2->flagWest=temp;
+ 	}
+ }

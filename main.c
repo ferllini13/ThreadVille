@@ -5,6 +5,7 @@
 #include "./include/city.h"
 #include "./include/serialBridge.h"
 #include <pthread.h>
+#include <unistd.h>
 
 
 int main(int argc, char const *argv[]){
@@ -197,9 +198,12 @@ int main(int argc, char const *argv[]){
 
 	struct vehicle *car;
 	struct vehicle *car2;
-	car = create(0, 1, 2, 2000, 0, actualNode, NULL, NULL, NULL, rute26, "Purple", "CAR1", "nodeA43B12");
-	car2 = create(0, 1, 2, 3000, 0, actualNode, NULL, NULL, NULL, rute26, "Green", "CAR2", "nodeA43B12");
-
+	struct vehicle *car3;
+	struct vehicle *car4;
+	car = create(0, 1, 0, 2000, 0, actualNode, NULL, NULL, NULL, rute26, "Purple", "CAR1", "nodeA43B12");
+	car2 = create(0, 1, 1, 2000, 0, actualNode, NULL, NULL, NULL, rute26, "Yellow", "CAR2", "nodeA43B12");
+	car3 = create(0, 1, 2, 2000, 0, actualNode, NULL, NULL, NULL, rute26, "Red", "CAR3", "nodeA43B12");
+	car4 = create(0, 1, 3, 2000, 0, actualNode, NULL, NULL, NULL, rute26, "Blue", "CAR4", "nodeA43B12");
 
 	
 /*
@@ -347,22 +351,17 @@ int main(int argc, char const *argv[]){
     pthread_create(&brg,NULL,(void *)&draw,NULL);
 
 
-		pthread_t t1;
-    	pthread_t t2;
+	pthread_t t1;
+    pthread_t t2;
+    pthread_t t3;
+    pthread_t t4;
+
     
+   	
    	pthread_create(&t1,NULL,(void *)&move,(void *)car);
-
     pthread_create(&t2,NULL,(void *)&move,(void *)car2);
-
-	
-
-
-
-
-
-
-
-
+    pthread_create(&t3,NULL,(void *)&move,(void *)car3);
+    pthread_create(&t4,NULL,(void *)&move,(void *)car4);
 	pthread_exit(NULL);
 
 	
