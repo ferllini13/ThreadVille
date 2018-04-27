@@ -194,7 +194,7 @@ int main(int argc, char const *argv[]){
 
 
 	struct vehicle *car;
-	car = create(0, 1, 2, 0, 0, actualNode, NULL, NULL, NULL, rute26, "", "", "nodeA43B12");
+	car = create(0, 1, 2, 0, 0, actualNode, NULL, NULL, NULL, rute26, "Purple", "", "nodeA43B12");
 
 
 	
