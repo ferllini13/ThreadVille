@@ -21,6 +21,9 @@ typedef struct vehicle{
 	int speed;
 	int trips;
 	struct NODE *actualNode; //Actual node in which the car is
+	struct BRIDGE *actualNodeB; //Actual node bridge in which the car is
+	struct ROUNDABOUT *actualNodeR; //Actual node roundabout in which the car is
+	struct HIGHWAY *actualNodeH; //Actual node highway in which the car is
 	char *nextNode;
 	list rute;
 	char * color;
@@ -30,7 +33,7 @@ typedef struct vehicle{
 
 void move(vehicle * car);
 
-vehicle* create(int priority, int size, int position, int speed, int trips, struct NODE * actualNode, struct list rute, char * color, char * model, char * nextNode);
+vehicle* create(int priority, int size, int position, int speed, int trips, struct NODE * actualNode, struct BRIDGE * actualNodeB, struct ROUNDABOUT * actualNodeR, struct HIGHWAY * actualNodeH, struct list rute, char * color, char * model, char * nextNode);
 
 void addMove(vehicle * car, char * move);
 

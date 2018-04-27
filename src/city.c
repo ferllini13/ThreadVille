@@ -12,6 +12,10 @@ NODE* createNode(int id, char *name, int pathWeight){
 	node->id = id;
 	node->name = strdup(name);
 	node->pathWeight = pathWeight;
+	node->nextStraight = NULL;
+	node->nextRight = NULL;
+	node->nextRoundabout = NULL;
+	node->nextBridge = NULL;
 
 	for(int i = 0; i < 5; i++){
 		node->Vehicles[i] = NULL;
@@ -27,6 +31,8 @@ HIGHWAY* createHighway(int id, char *name, int pathWeight){
 	highway->id = id;
 	highway->name = strdup(name);
 	highway->pathWeight = pathWeight;
+	highway->nextRight = NULL;
+
 	for(int i = 0; i < 5; i++){
 		highway->Vehicles[i] = NULL;
 	}
@@ -41,6 +47,10 @@ ROUNDABOUT* createRoundabout(int id, char *name, int pathWeight){
 	roundabout->id = id;
 	roundabout->name = strdup(name);
 	roundabout->pathWeight = pathWeight;
+	roundabout->nextStraight = NULL;
+	roundabout->nextRight1 = NULL;
+	roundabout->nextRight2 = NULL;
+
 	for(int i = 0; i < 5; i++){
 		roundabout->Vehicles[i] = NULL;
 	}
@@ -49,19 +59,38 @@ ROUNDABOUT* createRoundabout(int id, char *name, int pathWeight){
 //*************************************************************************************************
 
 //***BRIDGE****************************************************************************************
+BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, int K){
+	BRIDGE *bridge = (BRIDGE *)calloc(1, sizeof(BRIDGE));
+	bridge->id = id;
+	bridge->name = strdup(name);
+	bridge->type=type;
+	bridge->timeOut=timeOut;
+	bridge->K=K;
+	bridge->empty=1;
+	bridge->flagEast=0;
+	bridge->flagWest=0;
+	bridge->nextEast = NULL;
+	bridge->nextWest = NULL;
+
+	for (int i = 0; i < 5; i++){
+		bridge->Vehicles[i] = NULL;
+	}
+	return bridge;
+}
+
 void manageBridge(BRIDGE* bridge){
-	if ((*bridge).type==1){
+	if ((*bridge).type==1){ //Transit officer
 		while (1){
-			if((*bridge).eastQueue.size==7&&(*bridge).empty){
+			if((*bridge).eastQueue.size == 7 && (*bridge).empty){
 				bridge->flagEast=1;	
 			}
-			else if((*bridge).westQueue.size==7&&(*bridge).empty){
+			else if((*bridge).westQueue.size == 7 && (*bridge).empty){
 				bridge->flagEast=0;	
 			}
 		}
 
 	}
-	else if ((*bridge).type==2){
+	else if ((*bridge).type==2){ //Timeout
 		while (1){
 			int temp;
 			sleep((*bridge).timeOut);
@@ -70,25 +99,12 @@ void manageBridge(BRIDGE* bridge){
 			bridge->flagWest=temp;
 		}
 	}
-	else {
+	else {	//Jungle law
 		bridge->flagEast=1;
 		bridge->flagWest=1;
 	}
 }
 
-BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, int K){
-	BRIDGE *bridge = (BRIDGE *)calloc(1, sizeof(BRIDGE));
-	bridge->type=type;
-	bridge->timeOut=timeOut;
-	bridge->K=K;
-	bridge->empty=1;
-	bridge->flagEast=0;
-	bridge->flagWest=0;
-	for (int i = 0; i < 5; i++){
-		bridge->Vehicles[i] = NULL;
-	}
-	return bridge;
-}
 //*************************************************************************************************
 
 //***Defining streets*********************************
@@ -490,7 +506,7 @@ NODE* init(){
 	nodeB34C21->nextRight = nodeC14;
 
 	//Nodes from C
-	nodeC14->nextStraight = roundaboutY;
+	nodeC14->nextRoundabout = roundaboutY;
 	nodeC14->nextRight = NULL;
 	nodeC32->nextStraight = nodeB32;
 	nodeC32->nextRight = nodeB34C21;
@@ -498,7 +514,7 @@ NODE* init(){
 	//Nodes from D
 	nodeD14->nextStraight = nodeE14;
 	nodeD14->nextRight = nodeD43E12;
-	nodeD32->nextStraight = bridge1;
+	nodeD32->nextBridge = bridge1;
 	nodeD32->nextRight = NULL;
 
 	//Node from DE
@@ -546,7 +562,7 @@ NODE* init(){
 	nodeH34I21->nextRight = nodeI14;
 
 	//Nodes from I
-	nodeI14->nextStraight = bridge1;
+	nodeI14->nextBridge = bridge1;
 	nodeI14->nextRight = NULL;
 	nodeI32->nextStraight = nodeH32;
 	nodeI32->nextRight = nodeH34I21;
@@ -554,7 +570,7 @@ NODE* init(){
 	//Nodes from J
 	nodeJ14->nextStraight = nodeK14;
 	nodeJ14->nextRight = nodeJ43K12;
-	nodeJ32->nextStraight = bridge2;
+	nodeJ32->nextBridge = bridge2;
 	nodeJ32->nextRight = NULL;
 
 	//Node from JK
@@ -602,7 +618,7 @@ NODE* init(){
 	nodeN34O21->nextRight = nodeO14;
 
 	//Nodes from O
-	nodeO14->nextStraight = bridge2;
+	nodeO14->nextBridge = bridge2;
 	nodeO14->nextRight = NULL;
 	nodeO32->nextStraight = nodeN32;
 	nodeO32->nextRight = nodeN34O21;
@@ -610,7 +626,7 @@ NODE* init(){
 	//Nodes from P
 	nodeP14->nextStraight = nodeQ14;
 	nodeP14->nextRight = nodeP43Q12;
-	nodeP32->nextStraight = bridge3;
+	nodeP32->nextBridge = bridge3;
 	nodeP32->nextRight = NULL;
 
 	//Node from PQ
@@ -658,7 +674,7 @@ NODE* init(){
 	nodeT34U21->nextRight = nodeU14;
 
 	//Nodes from U
-	nodeU14->nextStraight = bridge3;
+	nodeU14->nextBridge = bridge3;
 	nodeU14->nextRight = NULL;
 	nodeU32->nextStraight = nodeT32;
 	nodeU32->nextRight = nodeT34U21;
@@ -666,7 +682,7 @@ NODE* init(){
 	//Nodes from V
 	nodeV14->nextStraight = nodeW14;
 	nodeV14->nextRight = nodeV43W12;
-	nodeV32->nextStraight = roundaboutZ;
+	nodeV32->nextRoundabout = roundaboutZ;
 	nodeV32->nextRight = NULL;
 
 	//Node from VW
@@ -717,16 +733,23 @@ NODE* init(){
 
 	//***HIGHWAYS**********************************************
 	//Highway SN1
-	highwaySN1->nextNode = roundaboutZ;
+	highwaySN1->nextRight = roundaboutZ;
 
 	//Highway SN2
-	highwaySN2->nextNode = roundaboutZ;
+	highwaySN2->nextRight = roundaboutZ;
 
 	//Highway NS1
-	highwayNS1->nextNode = roundaboutY;
+	highwayNS1->nextRight = roundaboutY;
 
 	//Highway NS2
-	highwayNS2->nextNode = roundaboutY;
+	highwayNS2->nextRight = roundaboutY;
+
+	// manageBridge(bridge1);
+	// manageBridge(bridge2);
+	// manageBridge(bridge3);
+
+	bridge1->flagEast = 1;
+	bridge2->flagWest = 1;
 
 	return nodeA14;
 }
