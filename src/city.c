@@ -750,6 +750,7 @@ NODE* init(){
 
 	bridge1->flagEast = 1;
 	bridge2->flagWest = 1;
+	bridge3->flagEast = 1;
 
 	return nodeA14;
 }
