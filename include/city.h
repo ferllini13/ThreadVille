@@ -14,6 +14,9 @@ typedef struct NODE {
 	struct vehicle *Vehicles[5];
 	struct NODE *nextStraight; // Next node straight direction
 	struct NODE *nextRight; // Next node to the right
+
+	struct ROUNDABOUT *nextRoundabout; // Next bridge straight direction
+	struct BRIDGE *nextBridge; // Next bridge straight direction
 	int pathWeight;
 }NODE;
 
@@ -27,7 +30,7 @@ typedef struct HIGHWAY {
 	int id;
 	char *name;
 	struct vehicle *Vehicles[20];
-	struct ROUNDABOUT *nextNode; // Next node
+	struct ROUNDABOUT *nextRight; // Next node
 	int pathWeight;
 }HIGHWAY;
 
