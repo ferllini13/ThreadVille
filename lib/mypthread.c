@@ -2,15 +2,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/time.h>
 #include <signal.h>
 #include <errno.h>
 #include "../include/mypthread.h"
 #include "../include/queue.h"
 
-int schedule_algorithm; // 0: Round Robin, 1: Lottery, 2: Real
+int schedule_algorithm = -1; // 0: Round Robin, 1: Lottery, 2: Real
 int initialized = 0;
 int ticket_count = 0;
+int is_done = 0;
 
 ucontext_t main_context;
 queue ready_que, finish_que;
@@ -23,7 +25,34 @@ int threads_running = 0;
 
 struct itimerval timer;
 
-void schedule_rr(void)
+/* ==============================
+ *       UTILITY FUNCTIONS      *
+ * =============================*/
+static int in_list(int ticket, int *list)
+{
+    int found = 0;
+    for (int i = 0; i < ticket_count; ++i)
+    {
+        if (list[i] == ticket)
+            return 1;
+    }
+    return 0;
+}
+
+static int check_winner(mypthread_t *thread, int ticket)
+{
+    if (thread->id == -1)
+        return -1;
+    if (in_list(ticket, thread->tickets))
+        return 1;
+    else
+        return 0;
+}
+
+/* ==============================
+ *      SCHEDULING FUNCTIONS    *
+ * =============================*/
+static void schedule_rr(void)
 {
     mypthread_t *prev_thread, *next_thread = NULL;
     setitimer(ITIMER_VIRTUAL, 0, 0); // Stop time.
@@ -39,22 +68,72 @@ void schedule_rr(void)
         cancel_current = 0;
     next_thread = dequeue(&ready_que);
     if (next_thread == NULL)
-    {
-        printf("Everything done in ready queue!\n"); // For testing.
         exit(EXIT_SUCCESS);
-    }
     current_running = next_thread;
     setitimer(ITIMER_VIRTUAL, &timer, 0); // Start time.
     if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+    {
         perror("Error while trying to swap context.");
+        exit(EXIT_FAILURE);
+    }
 }
 
-void schedule_lott(void)
+static void schedule_lott(void)
 {
-    // TODO
+    mypthread_t *prev_thread, *next_thread = NULL;
+    int is_winner = 0;
+    int winner;
+    if (getcontext(&main_context) == -1)
+    {
+        perror("Can't get current context");
+        exit(EXIT_FAILURE);
+    }
+    prev_thread = current_running;
+    if (!cancel_current)
+        enqueue(&ready_que, prev_thread);
+    else
+        cancel_current = 0;
+    if (queue_len(&ready_que) == 0)
+        exit(EXIT_SUCCESS);
+    while (!is_winner)
+    {
+        winner = (rand() % ticket_count) + 1;
+        for (int i = 0; i < queue_len(&ready_que); ++i)
+        {
+            if (queue_len(&ready_que) != 0)
+            {
+                int if_winner = check_winner(get_element(&ready_que, i), winner);
+                if (if_winner == -1)
+                {
+                    is_winner = 1;
+                    is_done = 1;
+                    break;
+                }
+                if (if_winner)
+                {
+                    next_thread = get_element(&ready_que, i);
+                    remove_node(&ready_que, next_thread);
+                    is_winner = 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    current_running = next_thread;
+    if (!is_done)
+    {
+        if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+        {
+            perror("Error while trying to swap context.");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+        exit(EXIT_SUCCESS);
 }
 
-void schedule(int signal)
+static void schedule(int signal)
 {
     switch (schedule_algorithm)
     {
@@ -62,7 +141,7 @@ void schedule(int signal)
         schedule_rr();
         break;
     case 1:
-        schedule_rr(); // TODO: Implement lottery ticket scheduling
+        schedule_lott(); // TODO: Implement lottery ticket scheduling
         break;
     }
 }
@@ -117,6 +196,9 @@ void mypthread_run(void *(*fnc)(void *), void *args)
 
 int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), void *args)
 {
+    if (schedule_algorithm == -1 )
+        mypthread_setsched(0, 10);
+    
     if (!(schedule_algorithm == 0 || schedule_algorithm == 1 || schedule_algorithm == 2))
     {
         printf("Error: No scheduling algorithm specified.\n");
@@ -133,6 +215,7 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
     thread->context.uc_stack.ss_size = SIGSTKSZ;
 
     makecontext(&(thread->context), (void (*)())mypthread_run, 2, fnc, args);
+    ++threads_running;
     if (schedule_algorithm == 1)
     {
         int tickets;
@@ -141,9 +224,11 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
         {
         case 3:
             tickets = 10;
+            //printf("Thread id %d with priority %d got %d tickets.\n", thread->id, priority, tickets);
             break;
         case 2:
             tickets = 5;
+            //printf("Thread id %d with priority %d got %d tickets.\n", thread->id, priority, tickets);
             break;
         case 1:
             tickets = 1;
@@ -153,6 +238,7 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
         for (int i = 0; i < tickets; ++i)
         {
             tickets_recieved[i] = last_ticket;
+            //printf("Ticket: %d\n", last_ticket);
             last_ticket++;
             ticket_count++;
         }
@@ -175,7 +261,10 @@ void mypthread_setsched(int algorithm, long quantum)
         signal(SIGVTALRM, schedule);
     }
     else if (algorithm == 1)
+    {
         schedule_algorithm = 1;
+        srand(time(0));
+    }
     if (!initialized)
     {
         queue_init(&ready_que);
@@ -193,8 +282,11 @@ void mypthread_setsched(int algorithm, long quantum)
 
 void mypthread_yield(void)
 {
-    setitimer(ITIMER_VIRTUAL, 0, 0);
-    setitimer(ITIMER_VIRTUAL, &timer, 0);
+    if (schedule_algorithm == 0)
+    {
+        setitimer(ITIMER_VIRTUAL, 0, 0);
+        setitimer(ITIMER_VIRTUAL, &timer, 0);
+    }
     schedule(0);
 }
 
@@ -207,6 +299,11 @@ int mypthread_join(mypthread_t *thread, void **ret_val)
 {
     if (thread == current_running)
         return 1;
+    if (schedule_algorithm == 1 && (queue_len(&finish_que) <= threads_running))
+    {
+        schedule_lott();
+        return 1;
+    }
     mypthread_t *selected_thread;
     while (1)
     {

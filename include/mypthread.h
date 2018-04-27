@@ -22,10 +22,11 @@ typedef struct
     int lock;
 } mypthread_mutex_t;
 
-void start_timer(void);
-void stop_timer(void);
-void schedule_rr(void);
-void schedule(int);
+static int in_list(int, int *);
+static int check_winner(mypthread_t *, int);
+static void schedule_rr(void);
+static void schedule_lott(void);
+static void schedule(int);
 int mypthread_cancel(mypthread_t *);
 void mypthread_exit(void *);
 void mypthread_detach(mypthread_t *);
