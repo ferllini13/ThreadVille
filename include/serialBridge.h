@@ -8,11 +8,11 @@
 #include "../include/city.h"
 
 
-
+int intitSerial( char * port);
 void initmat(char * data);
-void updateFlag(char * data,int nbridge, int west, int east);
-void updateBridge(char * data,int nbridge,struct BRIDGE * bridge);
-void writeSerial(char * data, char * port);
+void updateFlag(char * data,int nbridge, int west1, int east1,int west2, int east2);
+//void updateBridge(char * data, int nbridge, struct BRIDGE * bridge);
+void writeSerial(char * data, int fd);
 
 
 #endif

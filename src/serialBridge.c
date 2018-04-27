@@ -13,21 +13,17 @@ void initmat(char * data){
 }
 
 
-void updateFlag(char * data,int nbridge, int west, int east){
-	switch (nbridge){
-		case 79:
-			data[0]=east==1? 'G': 'R';
-			data[6]=west==1? 'G': 'R';
-			break;
-		case 80:
-			data[24]=east==1? 'G': 'R';
-			data[30]=west==1? 'G': 'R';
-			break;			
-	}
+void updateFlag(char * data,int nbridge, int west1, int east1,int west2, int east2){
+		data[0]=east1==1? 'G': 'R';
+		data[6]=west1==1? 'G': 'R';
+			
+		data[24]=east2==1? 'G': 'R';
+		data[30]=west2==1? 'G': 'R';
 }
 
 
 void updateBridge(char * data,int nbridge,struct BRIDGE * bridge){
+	//pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 	printf("%d\n", nbridge);
 	switch (nbridge){
 		case 79:
@@ -54,12 +50,18 @@ void updateBridge(char * data,int nbridge,struct BRIDGE * bridge){
 	}	
 }
 
-void writeSerial(char * data, char * port){
+
+int intitSerial( char * port){
 	int fd = -1;
     fd = serialport_init(port, 9600);
     if (fd == -1){
         perror("Could not open port.");
     }
+    return fd;	
+}
+
+
+void writeSerial(char * data, int fd){
     serialport_flush(fd);
     serialport_write(fd, data);
 }

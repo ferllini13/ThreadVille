@@ -42,18 +42,12 @@ vehicle* create(int priority, int size, int position, int speed, int trips, stru
  }
 
 void move(vehicle * car){
-	
-
-	char * data = (char*)calloc(64,sizeof(char));
-	initmat(data);
-	printf("%s\n", data);
-	writeSerial(data, "/dev/ttyACM0");
-
-
 
 	int run = 1; //0 means end
 	char * lastNodeName = car->actualNode->name;
 	while(run){
+		// if( car->rute.size < 2)
+			sleep((*car).speed/1000);
 		printf("car->position: %d\n", car->position);
 		if (car->actualNode != NULL)
 			printf("car->actualNode->name: %s\n", car->actualNode->name);
@@ -65,11 +59,11 @@ void move(vehicle * car){
 			printf("car->actualNodeR->name: %s\n", car->actualNodeR->name);
 
 		printf("car->nextNode: %s\n", car->nextNode);
-		printf("car->rute.move: %s\n\n\n", car->rute.move);
+		printf("car->rute.move: %s\n", car->rute.move);
+		printf("car->color -- car->model: %s  --  %s \n\n\n", car->color,car->model);
 		//printf("car->rute.size: %d\n\n\n", car->rute.size);
 
-		// if( car->rute.size < 2)
-			sleep((*car).speed/1000);
+		
 		
 	// char* nameNextNodeStraight2 = car->actualNode->nextStraight->name;
 	// char* nameNextNodeRight2 = car->actualNode->nextRight->name;
@@ -123,16 +117,16 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[car->position + 1] = car;
 						car->actualNodeB->Vehicles[car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB1W == 0){
 					if(car->actualNodeB->Vehicles[3 - car->position] == NULL){
 						car->actualNodeB->Vehicles[3 - car->position] = car;
 						car->actualNodeB->Vehicles[4 - car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 					
 				} else if(cmpB2E == 0){
@@ -141,16 +135,16 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[car->position + 1] = car;
 						car->actualNodeB->Vehicles[car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB2W == 0){
 					if(car->actualNodeB->Vehicles[3 - car->position] == NULL){
 						car->actualNodeB->Vehicles[3 - car->position] = car;
 						car->actualNodeB->Vehicles[4 - car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 					
 				} else if(cmpB3E == 0){
@@ -159,16 +153,16 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[car->position + 1] = car;
 						car->actualNodeB->Vehicles[car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB3W == 0){
 					if(car->actualNodeB->Vehicles[3 - car->position] == NULL){
 						car->actualNodeB->Vehicles[3 - car->position] = car;
 						car->actualNodeB->Vehicles[4 - car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 					
 				}
@@ -396,8 +390,8 @@ void move(vehicle * car){
 
 				printf("***************************************************BRIDGE\n");
 
-				updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-				writeSerial(data, "/dev/ttyACM0");
+				//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+				//writeSerial(data, "/dev/ttyACM0");
 
 
 			// } else if(cmpHSN1 == 0 || cmpHSN2 == 0 || cmpHNS1 == 0 || cmpHNS2 == 0){
@@ -515,8 +509,8 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNode = car->actualNodeB->nextWest;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//pdateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 						car->actualNodeB = NULL;
 					}
 					break;
@@ -526,8 +520,8 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[0] = NULL;
 						car->position = 0;
 						car->actualNode = car->actualNodeB->nextEast;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 						car->actualNodeB = NULL;
 					}
 					break;
@@ -618,7 +612,9 @@ void move(vehicle * car){
 					printf("car->position: %d\n", car->position);
 					printf("car->actualNode->name: %s\n", car->actualNode->name);
 					printf("car->nextNode: %s\n", car->nextNode);
-					printf("car->rute.move: %s\n\n\n", car->rute.move);
+					printf("car->rute.move: %s\n", car->rute.move);
+					printf("car->color -- car->model: %s  --  %s \n\n\n", car->color,car->model);
+
 					// printf("car->rute.size: %d\n\n\n", car->rute.size);
 					// printf("car->rute.finalPosition: %d\n\n\n", car->rute.finalPosition);
 				}
@@ -676,48 +672,48 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[car->position + 1] = car;
 						car->actualNodeB->Vehicles[car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB1W == 0){
 					if(car->actualNodeB->Vehicles[3 - car->position] == NULL){
 						car->actualNodeB->Vehicles[3 - car->position] = car;
 						car->actualNodeB->Vehicles[4 - car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB2E == 0){
 					if(car->actualNodeB->Vehicles[car->position + 1] == NULL){
 						car->actualNodeB->Vehicles[car->position + 1] = car;
 						car->actualNodeB->Vehicles[car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB2W == 0){
 					if(car->actualNodeB->Vehicles[3 - car->position] == NULL){
 						car->actualNodeB->Vehicles[3 - car->position] = car;
 						car->actualNodeB->Vehicles[4 - car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB3E == 0){
 					if(car->actualNodeB->Vehicles[car->position + 1] == NULL){
 						car->actualNodeB->Vehicles[car->position + 1] = car;
 						car->actualNodeB->Vehicles[car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				} else if(cmpB3W == 0){
 					if(car->actualNodeB->Vehicles[3 - car->position] == NULL){
 						car->actualNodeB->Vehicles[3 - car->position] = car;
 						car->actualNodeB->Vehicles[4 - car->position] = NULL;
 						car->position = car->position + 1;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 					}
 				}
 			}
@@ -941,8 +937,8 @@ void move(vehicle * car){
 
 				printf("***************************************************BRIDGE\n");
 
-				updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-				writeSerial(data, "/dev/ttyACM0");
+				//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+				//writeSerial(data, "/dev/ttyACM0");
 
 			// } else if(cmpHSN1 == 0 || cmpHSN2 == 0 || cmpHNS1 == 0 || cmpHNS2 == 0){
 
@@ -1016,8 +1012,8 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[4] = NULL;
 						car->position = 0;
 						car->actualNode = car->actualNodeB->nextWest;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 						car->actualNodeB = NULL;
 					}
 					break;
@@ -1027,8 +1023,8 @@ void move(vehicle * car){
 						car->actualNodeB->Vehicles[0] = NULL;
 						car->position = 0;
 						car->actualNode = car->actualNodeB->nextEast;
-						updateBridge(data,car->actualNodeB->id,car->actualNodeB);
-						writeSerial(data, "/dev/ttyACM0");
+						//updateBridge(data,car->actualNodeB->id,car->actualNodeB);
+						//writeSerial(data, "/dev/ttyACM0");
 						car->actualNodeB = NULL;
 					}
 					break;

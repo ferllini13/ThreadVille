@@ -754,3 +754,54 @@ NODE* init(){
 
 	return nodeA14;
 }
+
+int fd;
+
+void draw(){
+	char * data=(char *)calloc(64,sizeof(char));
+    initmat(data);
+    fd=intitSerial("/dev/ttyACM0");
+    data[48]='G';
+    data[54]='G';
+
+    while(1){
+    	updateBridges(data);
+    }
+}
+
+
+
+void updateBridges(char * data){
+			data[1]=bridge1->Vehicles[0]!=NULL?bridge1->Vehicles[0]->color[0]:'N';
+			data[2]=bridge1->Vehicles[1]!=NULL?bridge1->Vehicles[1]->color[0]:'N';
+			data[3]=bridge1->Vehicles[2]!=NULL?bridge1->Vehicles[2]->color[0]:'N';
+			data[4]=bridge1->Vehicles[3]!=NULL?bridge1->Vehicles[3]->color[0]:'N';
+			data[5]=bridge1->Vehicles[4]!=NULL?bridge1->Vehicles[4]->color[0]:'N';
+
+			data[25]=bridge2->Vehicles[0]!=NULL?bridge2->Vehicles[0]->color[0]:'N';
+			data[26]=bridge2->Vehicles[1]!=NULL?bridge2->Vehicles[1]->color[0]:'N';
+			data[27]=bridge2->Vehicles[2]!=NULL?bridge2->Vehicles[2]->color[0]:'N';
+			data[28]=bridge2->Vehicles[3]!=NULL?bridge2->Vehicles[3]->color[0]:'N';
+			data[29]=bridge2->Vehicles[4]!=NULL?bridge2->Vehicles[4]->color[0]:'N';
+			
+			data[49]=bridge3->Vehicles[0]!=NULL?bridge3->Vehicles[0]->color[0]:'N';
+			data[50]=bridge3->Vehicles[1]!=NULL?bridge3->Vehicles[1]->color[0]:'N';
+			data[51]=bridge3->Vehicles[2]!=NULL?bridge3->Vehicles[2]->color[0]:'N';
+			data[52]=bridge3->Vehicles[3]!=NULL?bridge3->Vehicles[3]->color[0]:'N';
+			data[53]=bridge3->Vehicles[4]!=NULL?bridge3->Vehicles[4]->color[0]:'N';
+			
+
+			data[0]=(*bridge1).flagEast==1? 'G': 'R';
+			data[6]=(*bridge1).flagWest==1? 'G': 'R';
+			
+			data[24]=(*bridge2).flagEast==1? 'G': 'R';
+			data[30]=(*bridge2).flagWest==1? 'G': 'R';
+
+			writeSerial(data,fd);
+
+
+}
+
+
+
+    

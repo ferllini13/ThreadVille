@@ -3,6 +3,8 @@
 #include "./include/confReader.h"
 #include "./include/vehicle.h"
 #include "./include/city.h"
+#include "./include/serialBridge.h"
+#include <pthread.h>
 
 
 int main(int argc, char const *argv[]){
@@ -194,7 +196,9 @@ int main(int argc, char const *argv[]){
 
 
 	struct vehicle *car;
-	car = create(0, 1, 2, 0, 0, actualNode, NULL, NULL, NULL, rute26, "Purple", "", "nodeA43B12");
+	struct vehicle *car2;
+	car = create(0, 1, 2, 2000, 0, actualNode, NULL, NULL, NULL, rute26, "Purple", "CAR1", "nodeA43B12");
+	car2 = create(0, 1, 2, 3000, 0, actualNode, NULL, NULL, NULL, rute26, "Green", "CAR2", "nodeA43B12");
 
 
 	
@@ -337,7 +341,34 @@ int main(int argc, char const *argv[]){
 	struct vehicle *car;
 	car = create(0, 1, 2, 0, 0, actualNode, NULL, NULL, NULL, rute12, "", "", "nodeA43B12");
 */
-	move(car);
+
+
+    pthread_t brg;
+    pthread_create(&brg,NULL,(void *)&draw,NULL);
+
+
+		pthread_t t1;
+    	pthread_t t2;
+    
+   	pthread_create(&t1,NULL,(void *)&move,(void *)car);
+
+    pthread_create(&t2,NULL,(void *)&move,(void *)car2);
+
+	
+
+
+
+
+
+
+
+
+	pthread_exit(NULL);
+
+	
+
+
+
 
 
 	return 0;

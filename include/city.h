@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <vehicle.h>
 #include <queues.h>
+#include "serialBridge.h"
 
 //***NODES*****************************************************************************************
 //Struct defining each road node in the map
@@ -81,6 +82,11 @@ BRIDGE* createBridge(int id, char *name, int pathWeight, int type, int timeOut, 
 //*************************************************************************************************
 
 NODE* init();
+
+
+
+void draw();
+void updateBridges(char * data);
 
 
 #endif
