@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include<time.h>
+#include <time.h>
 #include <sys/time.h>
 #include <signal.h>
 #include <errno.h>
@@ -12,6 +12,7 @@
 int schedule_algorithm; // 0: Round Robin, 1: Lottery, 2: Real
 int initialized = 0;
 int ticket_count = 0;
+int is_done = 0;
 
 ucontext_t main_context;
 queue ready_que, finish_que;
@@ -40,6 +41,8 @@ static int in_list(int ticket, int *list)
 
 static int check_winner(mypthread_t *thread, int ticket)
 {
+    if (thread->id == -1)
+        return -1;
     if (in_list(ticket, thread->tickets))
         return 1;
     else
@@ -103,24 +106,39 @@ static void schedule_lott(void)
         winner = (rand() % ticket_count) + 1;
         for (int i = 0; i < queue_len(&ready_que); ++i)
         {
-
-            if (check_winner(get_element(&ready_que, i), winner))
+            if (queue_len(&ready_que) != 0)
             {
-                printf("Winning ticket: %d belongs to ", winner);
-                next_thread = get_element(&ready_que, i);
-                printf("thread id %d!\n", next_thread->id);
-                remove_node(&ready_que, next_thread);
-                is_winner = 1;
-                break;
+                int if_winner = check_winner(get_element(&ready_que, i), winner);
+                if (if_winner == -1)
+                {
+                    is_winner = 1;
+                    is_done = 1;
+                    break;
+                }
+                if (if_winner)
+                {
+                    next_thread = get_element(&ready_que, i);
+                    remove_node(&ready_que, next_thread);
+                    is_winner = 1;
+                    break;
+                }
             }
         }
     }
 
     current_running = next_thread;
-    if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+    if (!is_done)
     {
-        perror("Error while trying to swap context.");
-        exit(EXIT_FAILURE);
+        if (swapcontext(&(prev_thread->context), &(next_thread->context)) == -1)
+        {
+            perror("Error while trying to swap context.");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+    {
+        printf("Everything done in ready queue!\n"); // For testing.
+        exit(EXIT_SUCCESS);
     }
 }
 
@@ -203,6 +221,7 @@ int mypthread_create(mypthread_t *thread, int priority, void *(*fnc)(void *), vo
     thread->context.uc_stack.ss_size = SIGSTKSZ;
 
     makecontext(&(thread->context), (void (*)())mypthread_run, 2, fnc, args);
+    ++threads_running;
     if (schedule_algorithm == 1)
     {
         int tickets;
@@ -269,8 +288,11 @@ void mypthread_setsched(int algorithm, long quantum)
 
 void mypthread_yield(void)
 {
-    setitimer(ITIMER_VIRTUAL, 0, 0);
-    setitimer(ITIMER_VIRTUAL, &timer, 0);
+    if (schedule_algorithm == 0)
+    {
+        setitimer(ITIMER_VIRTUAL, 0, 0);
+        setitimer(ITIMER_VIRTUAL, &timer, 0);
+    }
     schedule(0);
 }
 
@@ -283,6 +305,11 @@ int mypthread_join(mypthread_t *thread, void **ret_val)
 {
     if (thread == current_running)
         return 1;
+    if (schedule_algorithm == 1 && (queue_len(&finish_que) <= threads_running))
+    {
+        schedule_lott();
+        return 1;
+    }
     mypthread_t *selected_thread;
     while (1)
     {
